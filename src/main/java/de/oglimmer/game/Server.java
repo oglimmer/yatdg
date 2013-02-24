@@ -28,7 +28,7 @@ public class Server extends WebSocketServer {
 	private static final Log log = LogFactory.getLog(Server.class);
 
 	private static final Server singleton = new Server(new InetSocketAddress(
-			"0.0.0.0", 8081));
+			"127.0.0.1", 8081));
 
 	public static Server getInstance() {
 		return singleton;
