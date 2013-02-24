@@ -350,7 +350,7 @@ var globalFieldCounter = 0;
 var playerId = -1;
 var board = new Board();
 var hand = new Board();
-var sv = new ServerCommunication("ws://" + document.domain + ":8081/");
+var sv = new ServerCommunication("ws://td-ws.oglimmer.de/");
 var gameStarted = false;
 
 // INIT LISTENER
