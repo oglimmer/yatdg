@@ -350,7 +350,7 @@ var globalFieldCounter = 0;
 var playerId = -1;
 var board = new Board();
 var hand = new Board();
-var sv = new ServerCommunication("ws://td-ws.oglimmer.de/");
+var sv = new ServerCommunication();
 var gameStarted = false;
 
 // INIT LISTENER
@@ -379,7 +379,7 @@ window.onload = function() {
 		if (selectedHex != null) {
 
 			if (selectedHex.selectable) {
-				sv.ws.send(JSON.stringify({
+				sv.subSocket.push(JSON.stringify({
 					gameId : gameId,
 					playerId : playerId,
 					actionId : "select",
@@ -391,7 +391,7 @@ window.onload = function() {
 				var unit = board.idToUnits[unitProp];
 				if (unit.selectable && unit.x == selectedHex.x
 						&& unit.y == selectedHex.y) {
-					sv.ws.send(JSON.stringify({
+					sv.subSocket.push(JSON.stringify({
 						gameId : gameId,
 						playerId : playerId,
 						actionId : "select",
@@ -413,7 +413,7 @@ window.onload = function() {
 				var unit = hand.idToUnits[unitProp];
 				if (unit.selectable && unit.x == selectedHex.x
 						&& unit.y == selectedHex.y) {
-					sv.ws.send(JSON.stringify({
+					sv.subSocket.push(JSON.stringify({
 						gameId : gameId,
 						playerId : playerId,
 						actionId : "select",
@@ -482,7 +482,7 @@ function getRelMousePos(canvas, evt) {
 }
 
 function endTurn() {
-	sv.ws.send(JSON.stringify({
+	sv.subSocket.push(JSON.stringify({
 		gameId : gameId,
 		playerId : playerId,
 		actionId : "endturn"
@@ -495,18 +495,24 @@ var fifo = [];
  * 
  */
 function ServerCommunication(url) {
-	this.ws = new WebSocket(url);
-	var thisWs = this.ws;
 
-	this.ws.onopen = function(evt) {
+	var socket = window.atmosphere;
+	var request = {
+		url :'http://'+location.host+'/yatdg/srvcom',
+		contentType : "application/json",
+		logLevel : 'debug',
+		transport : 'websocket',
+		fallbackTransport : 'long-polling'
+	};
+	request.onOpen = function(response) {
 		console.log("Con opened. " + getCookie("playerId"));
 		if (!debug || getCookie("playerId") == "") {
-			thisWs.send(JSON.stringify({
+			subSocket.push(JSON.stringify({
 				gameId : gameId,
 				actionId : "init"
 			}));
 		} else {
-			thisWs.send(JSON.stringify({
+			subSocket.push(JSON.stringify({
 				gameId : gameId,
 				playerId : getCookie("playerId"),
 				actionId : "reinit"
@@ -514,24 +520,33 @@ function ServerCommunication(url) {
 			playerId = getCookie("playerId");
 		}
 	};
-
-	this.ws.onclose = function(evt) {
-		console.log("Con closed");
-	};
-
-	this.ws.onmessage = function(evt) {
-		var ret = JSON.parse(evt.data);
-		fifo.push(ret);
-		console.log("added item to fifo :" + ret);
-		if (!running) {
-			running = true;
-			processFifo();
+	request.onMessage = function(response) {
+		console.log("onMessage");
+		var message = response.responseBody;
+		try {
+			var ret = JSON.parse(message);
+			console.log(ret);
+			fifo.push(ret);
+			console.log("added item to fifo :" + ret);
+			if (!running) {
+				running = true;
+				processFifo();
+			}
+		} catch (e) {			
+			console.log('This doesn`t look like a valid JSON: ',message);
 		}
 	};
 
-	this.ws.onerror = function(evt) {
-		console.log("Con failed! " + evt.data);
+	request.onError = function(response) {
+		console.log("Con failed! " + response.data);
 	};
+	
+	request.onClose = function(evt) {
+		console.log("Con closed");
+	};
+
+	var subSocket = socket.subscribe(request);
+	this.subSocket = subSocket;
 };
 
 var running = false;
@@ -611,7 +626,7 @@ function moveUnit() {
 function processFifoElmenet(ret) {
 
 	if (ret.hasOwnProperty("error")) {
-		sv.ws.close();
+		window.atmosphere.unsubscribe();
 		console.log("Got error : " + ret.error);
 		document.getElementById("overlayText").innerHTML = "FATAL ERROR<br/>"
 				+ ret.error + "<br/><a href='index.jsp'>Start over</a>";
@@ -713,7 +728,6 @@ function processFifoElmenet(ret) {
 		overlay(ret.showWaitDialog);
 		if (ret.showWaitDialog) {
 			gameStarted = false;
-			setTimeout("sendKeepAlive()", 30000);
 		} else {
 			gameStarted = true;
 		}
@@ -746,17 +760,6 @@ function processFifoElmenet(ret) {
 
 	board.draw(ctxBoard);
 	hand.draw(ctxHand);
-}
-
-function sendKeepAlive() {
-	sv.ws.send(JSON.stringify({
-		gameId : gameId,
-		playerId : playerId,
-		actionId : "noop"
-	}));
-	if (!gameStarted) {
-		setTimeout("sendKeepAlive()", 30000);
-	}
 }
 
 // modal overlay

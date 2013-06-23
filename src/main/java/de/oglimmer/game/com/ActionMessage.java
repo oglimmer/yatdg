@@ -2,11 +2,10 @@ package de.oglimmer.game.com;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.java_websocket.WebSocket;
+import org.atmosphere.cpr.AtmosphereResource;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.logic.Game;
 import de.oglimmer.game.logic.GameManager;
 import de.oglimmer.game.logic.Player;
@@ -17,9 +16,9 @@ import de.oglimmer.game.logic.action.ActionFactory;
 public class ActionMessage implements Runnable {
 	private static final Log log = LogFactory.getLog(ActionMessage.class);
 
-	public static ActionMessage getInstance(JSONObject message, WebSocket conn)
-			throws JSONException {
-		return new ActionMessage(message, conn);
+	public static ActionMessage getInstance(JSONObject message,
+			AtmosphereResource r) throws JSONException {
+		return new ActionMessage(message, r);
 	}
 
 	private Game game;
@@ -32,15 +31,16 @@ public class ActionMessage implements Runnable {
 
 	private JSONObject parameters;
 
-	private WebSocket conn;
+	private AtmosphereResource r;
 
-	private ActionMessage(JSONObject message, WebSocket conn)
+	private ActionMessage(JSONObject message, AtmosphereResource r)
 			throws JSONException {
 		initGame(message);
 		initPlayer(message);
 		initAction(message);
 		initUiElement(message);
 		initParameters(message);
+		this.r = r;
 	}
 
 	private void initParameters(JSONObject message) {
@@ -99,10 +99,9 @@ public class ActionMessage implements Runnable {
 	public void run() {
 		try {
 			getAction().execute(getGame(), getPlayer(), getUiElement(),
-					getParameters());
+					getParameters(), r.getBroadcaster());
 		} catch (Exception e) {
 			log.error(e.toString(), e);
-			Server.getInstance().handleExcpetion(conn, e);
 		}
 	}
 

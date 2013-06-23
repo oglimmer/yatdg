@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.Broadcaster;
 
 import de.oglimmer.game.logic.Game;
 import de.oglimmer.game.logic.board.Field;
@@ -18,7 +19,7 @@ public class MeleeBattle extends Battle {
 		super(game, updatedUnits);
 	}
 
-	public void doMeleeBattles() {
+	public void doMeleeBattles(Broadcaster bc) {
 		for (Field field : getAllBattlegrounds()) {
 			Unit u1 = field.getUnit(0);
 			Unit u2 = field.getUnit(1);
@@ -26,8 +27,8 @@ public class MeleeBattle extends Battle {
 			log.debug("Battleground " + field + ", Unit_1:" + u1 + "/Unit_2:"
 					+ u2);
 
-			fight(u1, u2, Type.MELEE);
-			fight(u2, u1, Type.MELEE);
+			fight(u1, u2, Type.MELEE, bc);
+			fight(u2, u1, Type.MELEE, bc);
 
 		}
 		processDeath();

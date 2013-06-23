@@ -6,11 +6,11 @@ import java.util.concurrent.Executors;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.com.UnitResponseBuilder;
 import de.oglimmer.game.logic.board.Board;
@@ -92,28 +92,28 @@ public class Game {
 		return active;
 	}
 
-	public void endTurn(Player player) throws JSONException {
+	public void endTurn(Player player, Broadcaster bc) throws JSONException {
 
 		player.setDone(true);
 
 		if (players.get0().isDone() && players.get1().isDone() && !runningMove) {
 			runningMove = true;
-			TurnProcessor mp = new TurnProcessor(this);
+			TurnProcessor mp = new TurnProcessor(this, bc);
 			executorService.submit(mp);
 		}
 	}
 
-	public void newTurn() throws JSONException {
+	public void newTurn(Broadcaster bc) throws JSONException {
 
 		turnNo++;
 		if (!isRunning()) {
-			endGame();
+			endGame(bc);
 		} else {
 			for (Player player : players) {
 				player.setDone(false);
 				player.getUnits().enablePotential();
 			}
-			sendNewTurnToClients();
+			sendNewTurnToClients(bc);
 		}
 	}
 
@@ -125,7 +125,7 @@ public class Game {
 		return retObj;
 	}
 
-	private void endGame() throws JSONException {
+	private void endGame(Broadcaster bc) throws JSONException {
 		Field castle = getBoard().getGameMap().getCastle();
 
 		Unit castleUnit = castle.getUnit();
@@ -133,33 +133,38 @@ public class Game {
 		JSONObject o = new JSONObject();
 		o.put(ComConst.RO_ENDGAME, true);
 		if (castleUnit == null) {
-			processEndGameTie(o);
+			processEndGameTie(o, bc);
 		} else {
-			processEndGameWinLoss(castleUnit, o);
+			processEndGameWinLoss(castleUnit, o, bc);
 		}
 		GameManager.getInstance().removeGame(this);
 	}
 
-	private void processEndGameWinLoss(Unit u, JSONObject o)
+	private void processEndGameWinLoss(Unit u, JSONObject o, Broadcaster bc)
 			throws JSONException {
 		o.put(ComConst.RO_ENDGAMETEXT,
 				"You won!<br/><a href='index.jsp'>Start over</a>");
-		Server.getInstance().send(u.getOwningPlayer(), o);
+		// Server.getInstance().send(u.getOwningPlayer(), o);
+		bc.broadcast(o.toString(), u.getOwningPlayer().getAtmosphereResource());
 		o.put(ComConst.RO_ENDGAMETEXT,
 				"You lose!<br/><a href='index.jsp'>Start over</a>");
-		Server.getInstance().send(players.getOtherPlayer(u.getOwningPlayer()),
-				o);
+		// Server.getInstance().send(players.getOtherPlayer(u.getOwningPlayer()),
+		// o);
+		bc.broadcast(o.toString(), players.getOtherPlayer(u.getOwningPlayer())
+				.getAtmosphereResource());
 	}
 
-	private void processEndGameTie(JSONObject o) throws JSONException {
+	private void processEndGameTie(JSONObject o, Broadcaster bc)
+			throws JSONException {
 		o.put(ComConst.RO_ENDGAMETEXT,
 				"Tie. Nobody won.<br/><a href='index.jsp'>Start over</a>");
 		for (Player player : getPlayers()) {
-			Server.getInstance().send(player, o);
+			// Server.getInstance().send(player, o);
+			bc.broadcast(o.toString(), player.getAtmosphereResource());
 		}
 	}
 
-	private void sendNewTurnToClients() throws JSONException {
+	private void sendNewTurnToClients(Broadcaster bc) throws JSONException {
 		for (Player player : getPlayers()) {
 			JSONObject message = new JSONObject();
 
@@ -177,9 +182,10 @@ public class Game {
 			message.put(ComConst.RO_ENABLEENDTURN, true);
 			message.put(ComConst.RO_HELPTEXT, ComConst.MSG_NEW_TURN);
 
-			Server.getInstance().send(player, message);
+			// Server.getInstance().send(player, message);
+			bc.broadcast(message.toString(), player.getAtmosphereResource());
 
-			player.checkForEndTurn();
+			player.checkForEndTurn(bc);
 		}
 	}
 

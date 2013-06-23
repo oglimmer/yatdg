@@ -1,10 +1,11 @@
 package de.oglimmer.game.logic.action;
 
+import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.com.UnitResponseBuilder;
 import de.oglimmer.game.logic.Game;
@@ -18,20 +19,21 @@ public class ReinitAction implements Action {
 
 	@Override
 	public void execute(Game game, Player player, UIElement uiElement,
-			JSONObject parameters) throws JSONException {
+			JSONObject parameters, Broadcaster bc) throws JSONException {
 
 		JSONObject retData = new JSONObject();
-		addData(game, player, retData);
-		Server.getInstance().send(player, retData);
-
+		addData(game, player, retData, bc);
+		// Server.getInstance().send(player, retData);
+		AtmosphereResource a = player.getAtmosphereResource();
+		bc.broadcast(retData.toString(), a);
 	}
 
-	protected void addData(Game game, Player player, JSONObject retData)
-			throws JSONException {
+	protected void addData(Game game, Player player, JSONObject retData,
+			Broadcaster bc) throws JSONException {
 
 		handleNewFields(game, player, retData);
 
-		handleWaitDialog(game, player, retData);
+		handleWaitDialog(game, player, retData, bc);
 
 		handleNewUnits(game, player, retData);
 
@@ -55,8 +57,8 @@ public class ReinitAction implements Action {
 		}
 	}
 
-	private void handleWaitDialog(Game game, Player player, JSONObject retData)
-			throws JSONException {
+	private void handleWaitDialog(Game game, Player player, JSONObject retData,
+			Broadcaster bc) throws JSONException {
 		if (!game.getPlayers().isBothPlayersRegistered()) {
 			retData.put(ComConst.RO_SHOW_WAIT_DIALOG, true);
 			retData.put(ComConst.RO_WAIT_DIALOG_TEXT,
@@ -64,8 +66,10 @@ public class ReinitAction implements Action {
 		} else {
 			JSONObject infoOtherPlayer = new JSONObject();
 			infoOtherPlayer.put(ComConst.RO_SHOW_WAIT_DIALOG, false);
-			Server.getInstance().send(game.getPlayers().getOtherPlayer(player),
-					infoOtherPlayer);
+			// Server.getInstance().send(game.getPlayers().getOtherPlayer(player),
+			// infoOtherPlayer);
+			bc.broadcast(infoOtherPlayer.toString(), game.getPlayers()
+					.getOtherPlayer(player).getAtmosphereResource());
 		}
 	}
 

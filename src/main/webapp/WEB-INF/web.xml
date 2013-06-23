@@ -11,4 +11,20 @@
 		<listener-class>de.oglimmer.game.servlet.GameContextListener</listener-class>
 	</listener>
 
+	<servlet>
+		<description>AtmosphereServlet</description>
+		<servlet-name>AtmosphereServlet</servlet-name>
+		<servlet-class>org.atmosphere.cpr.AtmosphereServlet</servlet-class>
+		<async-supported>true</async-supported>
+		<init-param>
+			<param-name>org.atmosphere.cpr.packages</param-name>
+			<param-value>de.oglimmer.game</param-value>
+		</init-param>
+		<load-on-startup>0</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>AtmosphereServlet</servlet-name>
+		<url-pattern>/srvcom/*</url-pattern>
+	</servlet-mapping>
+
 </web-app>

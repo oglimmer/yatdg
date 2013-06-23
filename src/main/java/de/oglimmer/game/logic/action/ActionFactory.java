@@ -20,7 +20,6 @@ public class ActionFactory {
 		cache.put(ComConst.ACTION_REINIT, new ReinitAction());
 		cache.put(ComConst.ACTION_SELECT, new SelectAction());
 		cache.put(ComConst.ACTION_END_TURN, new EndTurnAction());
-		cache.put(ComConst.ACTION_NO_OP, new NoOpAction());
 	}
 
 	public Action getAction(String actionId) {

@@ -39,19 +39,7 @@ body:before {
 	<div id="wrap">
 		<div id="main">
 
-			<h1>A Multiplayer Tower-Defense Fantasy Combat Game (V0.1)</h1>
-
-			<div style="margin-bottom: 20px; font-style: italic;">
-				<p>Compatibility: This game works on Safari 5, Firefox 11 or
-					Chrome 14. However it doesn't work on Opera 11 or Internet Explorer
-					9 since they don't support WebSockets properly. The good thing is
-					it works pretty good on the iPad and on Android 4 (ICS) with Chrome
-					(the default browser doesn't work as well).</p>
-			</div>
-
-			<div id="warningDiv"
-				style="display: none; margin-bottom: 10px; font-size: 20px; color: red;">
-				WARNING! YOUR BROWSER IS NOT SUPPORTED! THE GAME WILL NOT WORK!</div>
+			<h1>A Multiplayer Tower-Defense Fantasy Combat Game (V0.2)</h1>
 
 			<div style="margin-bottom: 20px;">
 				Feedback appreciated: <a
@@ -83,13 +71,7 @@ body:before {
 			setTimeout("reload();", 2000);
 		});
 	}
-
-	if ($.browser.opera || $.browser.msie) {
-		$("#warningDiv").toggle();
-		$("#startGameDiv").toggle();
-		$("#joinGameDiv").toggle();
-	}
-
+	
 	setCookie("playerId", "");
 	function
 				setCookie(cookieName, cookieValue, nDays) {

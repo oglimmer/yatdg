@@ -43,7 +43,7 @@ body,canvas,div {
 }
 </style>
 </head>
-<body onunload="sv.ws.close();">
+<body onunload="window.atmosphere.unsubscribe();">
 	<div>
 		<button id="endTurnButton" onclick="endTurn();">No more deployments - end turn</button>
 	</div>
@@ -60,5 +60,7 @@ body,canvas,div {
 <script type="text/javascript">
 var gameId = "<%=request.getParameter("gameId")%>";
 </script>
+<script src="javascript/atmosphere-min.js"></script>
 <script src="code.js?foo=<%=Math.random()%>"></script>
+
 </html>

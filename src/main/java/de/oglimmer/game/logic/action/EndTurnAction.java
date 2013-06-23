@@ -1,10 +1,10 @@
 package de.oglimmer.game.logic.action;
 
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.com.UnitResponseBuilder;
 import de.oglimmer.game.logic.Game;
@@ -17,18 +17,19 @@ public class EndTurnAction implements Action {
 
 	@Override
 	public void execute(Game game, Player player, UIElement uiElement,
-			JSONObject parameters) throws JSONException {
+			JSONObject parameters, Broadcaster bc) throws JSONException {
 
 		player.getUnits().deactivateSelectables();
 		player.getDeployFields().deactivate();
 
-		updateClient(game, player);
+		updateClient(game, player, bc);
 
-		game.endTurn(player);
+		game.endTurn(player, bc);
 
 	}
 
-	private void updateClient(Game game, Player player) throws JSONException {
+	private void updateClient(Game game, Player player, Broadcaster bc)
+			throws JSONException {
 		JSONObject message = new JSONObject();
 
 		JSONArray arrUnits = new JSONArray();
@@ -46,7 +47,8 @@ public class EndTurnAction implements Action {
 		message.put(ComConst.RO_ENABLEENDTURN, false);
 		message.put(ComConst.RO_HELPTEXT, ComConst.MSG_WAIT);
 
-		Server.getInstance().send(player, message);
+		// Server.getInstance().send(player, message);
+		bc.broadcast(message.toString(), player.getAtmosphereResource());
 	}
 
 }

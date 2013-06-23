@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.Broadcaster;
 
 import de.oglimmer.game.logic.Game;
 import de.oglimmer.game.logic.Player;
@@ -21,20 +22,20 @@ public class RangedBattle extends Battle {
 		super(game, updatedUnits);
 	}
 
-	public void doRangedBattles() {
+	public void doRangedBattles(Broadcaster bc) {
 		for (RangedUnit rangedUnit : getAllRangedUnitFields()) {
-			battle(rangedUnit);
+			battle(rangedUnit, bc);
 		}
 		processDeath();
 	}
 
-	private void battle(RangedUnit rangedUnit) {
+	private void battle(RangedUnit rangedUnit, Broadcaster bc) {
 		Units possibleTargets = rangedUnit.getPossibleTargets();
 		log.debug("Ranged " + rangedUnit + " has " + possibleTargets.size()
 				+ " targets: " + possibleTargets);
 		if (!possibleTargets.isEmpty()) {
 			Unit target = possibleTargets.getRandomEnemy();
-			fight(rangedUnit, target, Type.RANGED);
+			fight(rangedUnit, target, Type.RANGED, bc);
 		}
 	}
 

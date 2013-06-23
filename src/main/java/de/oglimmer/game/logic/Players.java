@@ -7,6 +7,7 @@ import java.util.Iterator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.AtmosphereResource;
 
 import de.oglimmer.game.logic.unit.Unit;
 
@@ -62,11 +63,12 @@ public class Players implements Iterable<Player> {
 		return retPlayer;
 	}
 
-	public Player registerPlayer() {
+	public Player registerPlayer(AtmosphereResource resource) {
 		for (Player player : players) {
 			if (!player.isRegistered()) {
 				log.debug("setRegistered " + player.getId());
 				player.setRegistered(true);
+				player.setAtmosphereResource(resource);
 				return player;
 			}
 		}

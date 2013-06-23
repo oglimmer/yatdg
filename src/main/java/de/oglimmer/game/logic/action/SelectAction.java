@@ -1,10 +1,10 @@
 package de.oglimmer.game.logic.action;
 
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.com.UnitResponseBuilder;
 import de.oglimmer.game.logic.Game;
@@ -17,7 +17,7 @@ public class SelectAction implements Action {
 
 	@Override
 	public void execute(Game game, Player player, UIElement uiElement,
-			JSONObject parameters) throws JSONException {
+			JSONObject parameters, Broadcaster bc) throws JSONException {
 
 		boolean first;
 		if (player.getCurrentlySelected() == null) {
@@ -28,9 +28,9 @@ public class SelectAction implements Action {
 			first = false;
 		}
 
-		sendUpdatedUnitsFieldsToClient(game, player, first);
+		sendUpdatedUnitsFieldsToClient(game, player, first, bc);
 
-		player.checkForEndTurn();
+		player.checkForEndTurn(bc);
 	}
 
 	private void handleFirstClick(Game game, Player player, UIElement uiElement)
@@ -63,7 +63,7 @@ public class SelectAction implements Action {
 	}
 
 	private void sendUpdatedUnitsFieldsToClient(Game game, Player player,
-			boolean firstClick) throws JSONException {
+			boolean firstClick, Broadcaster bc) throws JSONException {
 		JSONObject message = new JSONObject();
 
 		JSONArray arrUnits = new JSONArray();
@@ -82,6 +82,7 @@ public class SelectAction implements Action {
 				(firstClick ? ComConst.MSG_AFTER_SELECT
 						: ComConst.MSG_AFTER_DEPLOY));
 
-		Server.getInstance().send(player, message);
+		// Server.getInstance().send(player, message);
+		bc.broadcast(message.toString(), player.getAtmosphereResource());
 	}
 }

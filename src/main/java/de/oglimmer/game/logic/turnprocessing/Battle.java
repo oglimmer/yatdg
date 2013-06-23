@@ -5,10 +5,10 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.logic.Game;
 import de.oglimmer.game.logic.Player;
@@ -41,7 +41,7 @@ public class Battle {
 	 * @param type
 	 * @return returns the damage done by the attacker to the target.
 	 */
-	protected int fight(Unit attacker, Unit target, Type type) {
+	protected int fight(Unit attacker, Unit target, Type type, Broadcaster bc) {
 
 		int dmg = attacker.getDamage(type);
 
@@ -50,7 +50,7 @@ public class Battle {
 		if (dmg > 0) {
 			target.setLife(target.getLife() - dmg);
 
-			sendDmgToClients(attacker, target, dmg);
+			sendDmgToClients(attacker, target, dmg, bc);
 
 			if (target.getLife() <= 0) {
 				markedForDeath.add(target);
@@ -68,7 +68,7 @@ public class Battle {
 		}
 	}
 
-	private void sendDmgToClients(Unit attacker, Unit target, int dmg) {
+	private void sendDmgToClients(Unit attacker, Unit target, int dmg, Broadcaster bc) {
 		try {
 			JSONObject o = new JSONObject();
 			o.put(ComConst.RO_SHOWBATTLE, true);
@@ -83,7 +83,8 @@ public class Battle {
 				o.put(ComConst.RO_HELPTEXT, helpText);
 				o.put(ComConst.RO_BATTLEINFOCOLOR, textColor);
 				o.put("waitTime", 700);
-				Server.getInstance().send(player, o);
+//				Server.getInstance().send(player, o);
+				bc.broadcast(o.toString(), player.getAtmosphereResource());
 			}
 			ThreadHelper.sleep(25);
 		} catch (JSONException e) {

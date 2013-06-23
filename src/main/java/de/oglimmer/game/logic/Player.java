@@ -2,6 +2,8 @@ package de.oglimmer.game.logic;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.AtmosphereResource;
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONException;
 
 import de.oglimmer.game.logic.action.EndTurnAction;
@@ -101,9 +103,9 @@ public class Player {
 		return game.getPlayers().get0() == this ? "yellow" : "brown";
 	}
 
-	public void checkForEndTurn() throws JSONException {
+	public void checkForEndTurn(Broadcaster bc) throws JSONException {
 		if (!getUnits().isSelectable()) {
-			new EndTurnAction().execute(getGame(), this, null, null);
+			new EndTurnAction().execute(getGame(), this, null, null, bc);
 		}
 	}
 
@@ -135,6 +137,19 @@ public class Player {
 	@Override
 	public String toString() {
 		return "Player [no=" + no + "]";
+	}
+
+	private AtmosphereResource ar;
+
+	public void setAtmosphereResource(AtmosphereResource ar) {
+		if (ar == null) {
+			throw new RuntimeException("errror");
+		}
+		this.ar = ar;
+	}
+
+	public AtmosphereResource getAtmosphereResource() {
+		return ar;
 	}
 
 }

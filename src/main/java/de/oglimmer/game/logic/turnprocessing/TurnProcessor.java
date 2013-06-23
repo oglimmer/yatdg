@@ -7,11 +7,11 @@ import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import de.oglimmer.game.Server;
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.com.UnitResponseBuilder;
 import de.oglimmer.game.logic.Game;
@@ -29,12 +29,15 @@ public class TurnProcessor implements Runnable {
 	private final MeleeBattle mb;
 	private final RangedBattle rb;
 
-	public TurnProcessor(Game game) {
+	private final Broadcaster bc;
+
+	public TurnProcessor(Game game, Broadcaster bc) {
 		this.game = game;
 		updatedUnits = new HashSet<Unit>();
 		movement = new Movement(game, updatedUnits);
 		mb = new MeleeBattle(game, updatedUnits);
 		rb = new RangedBattle(game, updatedUnits);
+		this.bc = bc;
 	}
 
 	@Override
@@ -42,13 +45,13 @@ public class TurnProcessor implements Runnable {
 		try {
 			log.debug("started asyncTurnEnd");
 
-			sendNewUnitsToClients();
+			sendNewUnitsToClients(bc);
 
 			ThreadHelper.sleep(25);
 
-			moveAndBattle();
+			moveAndBattle(bc);
 
-			game.newTurn();
+			game.newTurn(bc);
 
 			game.setRunningMove(false);
 
@@ -58,28 +61,28 @@ public class TurnProcessor implements Runnable {
 		}
 	}
 
-	private void moveAndBattle() throws JSONException {
+	private void moveAndBattle(Broadcaster bc) throws JSONException {
 
 		while (movement.anyPlayerHasMovingUnit()
 				|| !mb.getAllBattlegrounds().isEmpty()) {
 
 			movement.doMoveTurn();
-			sendNewPosToClients();
+			sendNewPosToClients(bc);
 			updatedUnits.clear();
 
-			doBattle();
-			sendNewPosToClients();
+			doBattle(bc);
+			sendNewPosToClients(bc);
 			updatedUnits.clear();
 			ThreadHelper.sleep(25);
 		}
 	}
 
-	private void doBattle() {
-		rb.doRangedBattles();
-		mb.doMeleeBattles();
+	private void doBattle(Broadcaster bc) {
+		rb.doRangedBattles(bc);
+		mb.doMeleeBattles(bc);
 	}
 
-	private void sendNewUnitsToClients() throws JSONException {
+	private void sendNewUnitsToClients(Broadcaster bc) throws JSONException {
 		Map<Player, Set<Unit>> playerToUnits = new HashMap<Player, Set<Unit>>();
 		for (Player player : game.getPlayers()) {
 			for (Unit unit : player.getUnits()) {
@@ -88,7 +91,7 @@ public class TurnProcessor implements Runnable {
 		}
 		for (Player player : playerToUnits.keySet()) {
 			sendUnitDataToClient(player, playerToUnits.get(player),
-					ComConst.RO_NEWUNITS);
+					ComConst.RO_NEWUNITS,bc);
 		}
 	}
 
@@ -113,17 +116,17 @@ public class TurnProcessor implements Runnable {
 		set.add(unit);
 	}
 
-	private void sendNewPosToClients() throws JSONException {
+	private void sendNewPosToClients(Broadcaster bc) throws JSONException {
 		if (!updatedUnits.isEmpty()) {
 			for (Player player : game.getPlayers()) {
 				sendUnitDataToClient(player, updatedUnits,
-						ComConst.RO_UPDATEUNITS);
+						ComConst.RO_UPDATEUNITS, bc);
 			}
 		}
 	}
 
 	private static void sendUnitDataToClient(Player player,
-			Set<Unit> updatedUnits, String key) throws JSONException {
+			Set<Unit> updatedUnits, String key, Broadcaster bc) throws JSONException {
 
 		JSONObject message = new JSONObject();
 
@@ -141,7 +144,8 @@ public class TurnProcessor implements Runnable {
 			}
 		}
 
-		Server.getInstance().send(player, message);
+		// Server.getInstance().send(player, message);
+		bc.broadcast(message.toString(), player.getAtmosphereResource());
 	}
 
 }

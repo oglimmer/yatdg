@@ -29,7 +29,8 @@ public class GameManager {
 	public Game getGame(String id) {
 		Game game = games.get(id);
 		if (game == null) {
-			throw new GameException("There is no game with id = " + id);
+			game = createGame(new GameCreator());
+			//throw new GameException("There is no game with id = " + id);
 		}
 		return game;
 	}
