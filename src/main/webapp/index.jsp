@@ -59,7 +59,7 @@ body:before {
 
 	</div>
 
-	<div id="footer">Copyright 2012 by oglimmer.de - Oliver Kurt -
+	<div id="footer">Copyright 2013 by oglimmer.de - Oliver Zimpasser -
 		All rights reserved.</div>
 
 </body>
