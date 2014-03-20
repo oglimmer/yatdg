@@ -498,7 +498,7 @@ function ServerCommunication(url) {
 
 	var socket = window.atmosphere;
 	var request = {
-		url :'http://'+location.host+'/srvcom',
+		url :'http://'+location.host+'/yatdg/srvcom',
 		contentType : "application/json",
 		logLevel : 'debug',
 		transport : 'websocket',
