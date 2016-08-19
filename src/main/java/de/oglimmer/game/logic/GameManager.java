@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GameManager {
 
-	private static final Log log = LogFactory.getLog(GameManager.class);
+	private static final Logger log = LoggerFactory.getLogger(GameManager.class);
 
 	private final static GameManager singleton = new GameManager();
 

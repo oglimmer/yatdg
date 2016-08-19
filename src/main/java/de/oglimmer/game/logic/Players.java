@@ -5,15 +5,15 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.atmosphere.cpr.AtmosphereResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.logic.unit.Unit;
 
 public class Players implements Iterable<Player> {
 
-	private static final Log log = LogFactory.getLog(Players.class);
+	private static final Logger log = LoggerFactory.getLogger(Players.class);
 
 	private final Player[] players;
 

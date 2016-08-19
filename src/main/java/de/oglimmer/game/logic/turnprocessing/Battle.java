@@ -3,11 +3,11 @@ package de.oglimmer.game.logic.turnprocessing;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.com.ComConst;
 import de.oglimmer.game.logic.Game;
@@ -17,7 +17,7 @@ import de.oglimmer.game.util.ThreadHelper;
 
 public class Battle {
 
-	private static final Log log = LogFactory.getLog(Battle.class);
+	private static final Logger log = LoggerFactory.getLogger(Battle.class);
 
 	public static enum Type {
 		MELEE, RANGED

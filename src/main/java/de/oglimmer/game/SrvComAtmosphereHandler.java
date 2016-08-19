@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.atmosphere.config.service.AtmosphereHandlerService;
 import org.atmosphere.cpr.ApplicationConfig;
 import org.atmosphere.cpr.AtmosphereHandler;
@@ -16,6 +14,8 @@ import org.atmosphere.cpr.AtmosphereResourceFactory;
 import org.atmosphere.handler.AbstractReflectorAtmosphereHandler;
 import org.json.JSONObject;
 import org.json.JSONTokener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.com.ActionMessage;
 import de.oglimmer.game.logic.Player;
@@ -26,8 +26,7 @@ public class SrvComAtmosphereHandler extends AbstractReflectorAtmosphereHandler
 
 	private ThreadPoolExecutor executorService = new ScheduledThreadPoolExecutor(
 			10);
-	private static final Log log = LogFactory
-			.getLog(SrvComAtmosphereHandler.class);
+	private static final Logger log = LoggerFactory.getLogger(SrvComAtmosphereHandler.class);
 
 	@Override
 	public void onRequest(AtmosphereResource r) throws IOException {

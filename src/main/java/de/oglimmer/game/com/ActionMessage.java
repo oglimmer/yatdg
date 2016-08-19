@@ -1,10 +1,10 @@
 package de.oglimmer.game.com;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.logic.Game;
 import de.oglimmer.game.logic.GameManager;
@@ -14,7 +14,7 @@ import de.oglimmer.game.logic.action.Action;
 import de.oglimmer.game.logic.action.ActionFactory;
 
 public class ActionMessage implements Runnable {
-	private static final Log log = LogFactory.getLog(ActionMessage.class);
+	private static final Logger log = LoggerFactory.getLogger(ActionMessage.class);
 
 	public static ActionMessage getInstance(JSONObject message,
 			AtmosphereResource r) throws JSONException {

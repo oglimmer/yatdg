@@ -4,8 +4,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.logic.unit.ArcherUnit;
 import de.oglimmer.game.logic.unit.RamUnit;
@@ -15,7 +15,7 @@ import de.oglimmer.game.logic.unit.WizardUnit;
 
 public class GameCreator {
 
-	private static final Log log = LogFactory.getLog(GameCreator.class);
+	private static final Logger log = LoggerFactory.getLogger(GameCreator.class);
 
 	private final List<Class<? extends Unit>> clazzes = new ArrayList<Class<? extends Unit>>();
 

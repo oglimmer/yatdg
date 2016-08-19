@@ -3,8 +3,8 @@ package de.oglimmer.game.logic.unit;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.logic.Player;
 import de.oglimmer.game.logic.Point;
@@ -17,7 +17,7 @@ import de.oglimmer.game.logic.turnprocessing.Battle.Type;
 
 public class Unit extends UIElement {
 
-	private static final Log log = LogFactory.getLog(Unit.class);
+	private static final Logger log = LoggerFactory.getLogger(Unit.class);
 
 	private final String name;
 

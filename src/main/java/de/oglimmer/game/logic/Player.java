@@ -1,10 +1,10 @@
 package de.oglimmer.game.logic;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.atmosphere.cpr.AtmosphereResource;
 import org.atmosphere.cpr.Broadcaster;
 import org.json.JSONException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.logic.action.EndTurnAction;
 import de.oglimmer.game.logic.board.DeployFields;
@@ -14,7 +14,7 @@ import de.oglimmer.game.util.RandomString;
 
 public class Player {
 
-	private static final Log log = LogFactory.getLog(Player.class);
+	private static final Logger log = LoggerFactory.getLogger(Player.class);
 
 	private final String id;
 

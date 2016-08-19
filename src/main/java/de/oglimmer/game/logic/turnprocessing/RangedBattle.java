@@ -3,9 +3,9 @@ package de.oglimmer.game.logic.turnprocessing;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.atmosphere.cpr.Broadcaster;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import de.oglimmer.game.logic.Game;
 import de.oglimmer.game.logic.Player;
@@ -16,7 +16,7 @@ import de.oglimmer.game.logic.unit.Units;
 
 public class RangedBattle extends Battle {
 
-	private static final Log log = LogFactory.getLog(RangedBattle.class);
+	private static final Logger log = LoggerFactory.getLogger(RangedBattle.class);
 
 	public RangedBattle(Game game, Set<Unit> updatedUnits) {
 		super(game, updatedUnits);
