@@ -19,8 +19,8 @@ import de.oglimmer.game.logic.map.GameMap;
 import de.oglimmer.game.logic.map.MapFactory;
 import de.oglimmer.game.logic.turnprocessing.TurnProcessor;
 import de.oglimmer.game.logic.unit.Unit;
-import de.oglimmer.game.util.DateHelper;
-import de.oglimmer.game.util.RandomString;
+import de.oglimmer.utils.date.DateHelper;
+import de.oglimmer.utils.random.RandomString;
 
 public class Game {
 

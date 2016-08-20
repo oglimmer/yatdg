@@ -3,7 +3,7 @@ package de.oglimmer.game.logic;
 import java.util.HashMap;
 import java.util.Map;
 
-import de.oglimmer.game.util.RandomString;
+import de.oglimmer.utils.random.RandomString;
 
 abstract public class UIElement {
 

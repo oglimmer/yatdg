@@ -10,7 +10,7 @@ import de.oglimmer.game.logic.action.EndTurnAction;
 import de.oglimmer.game.logic.board.DeployFields;
 import de.oglimmer.game.logic.unit.Unit;
 import de.oglimmer.game.logic.unit.Units;
-import de.oglimmer.game.util.RandomString;
+import de.oglimmer.utils.random.RandomString;
 
 public class Player {
 
