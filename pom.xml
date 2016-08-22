@@ -54,9 +54,9 @@
 			<type>war</type>
 		</dependency>
 		<dependency>
-			<groupId>de.oglimmer</groupId>
-			<artifactId>utils</artifactId>
-			<version>0.1-SNAPSHOT</version>
+			<groupId>de.oglimmer.utils</groupId>
+			<artifactId>common-utils</artifactId>
+			<version>0.1</version>
 		</dependency>
 	</dependencies>
 </project>
