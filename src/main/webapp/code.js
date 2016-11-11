@@ -495,10 +495,11 @@ var fifo = [];
  * 
  */
 function ServerCommunication(url) {
-
+	var urlPath = window.location.pathname;
+	urlPath = urlPath.substring(0, urlPath.lastIndexOf("/") + 1);
 	var socket = window.atmosphere;
 	var request = {
-		url :'http://'+location.host+'/yatdg/srvcom',
+		url :'http://'+location.host+urlPath+'/srvcom',
 		contentType : "application/json",
 		logLevel : 'debug',
 		transport : 'websocket',
