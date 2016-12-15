@@ -4,7 +4,7 @@
 <meta charset=utf-8 />
 <title>A Multiplayer Tower-Defense Fantasy Combat Game</title>
 <script
-	src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <style>
 html,body {
 	height: 100%;

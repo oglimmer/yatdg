@@ -5,11 +5,6 @@
 <head>
 <meta charset=utf-8 />
 <title>A Multiplayer Tower-Defense Fantasy Combat Game</title>
-<!--[if IE]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
-<style>
-</style>
 <body>
 	<h1>A Tower-Defense Fantasy Combat Game</h1>
 

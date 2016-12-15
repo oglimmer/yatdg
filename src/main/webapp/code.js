@@ -499,7 +499,7 @@ function ServerCommunication(url) {
 	urlPath = urlPath.substring(0, urlPath.lastIndexOf("/") + 1);
 	var socket = window.atmosphere;
 	var request = {
-		url :'http://'+location.host+urlPath+'/srvcom',
+		url :'//'+location.host+urlPath+'/srvcom',
 		contentType : "application/json",
 		logLevel : 'debug',
 		transport : 'websocket',
