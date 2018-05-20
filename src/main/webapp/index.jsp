@@ -47,6 +47,7 @@ body:before {
 			</div>
 
 			<div id="startGameDiv" style="margin-bottom: 10px;">
+        By clicking this link you accept 2 session cookies on your computer. They don't store any personal information and are just used to identify your computer unless you will close your browser.<br/>
 				<a href="createGame.jsp">Create new game and wait for another
 					player</a>
 			</div>
@@ -59,7 +60,7 @@ body:before {
 
 	</div>
 
-	<div id="footer">Copyright 2013 by oglimmer.de - Oliver Zimpasser -
+	<div id="footer">Copyright 2013-2018 by oglimmer.de - Oliver Zimpasser -
 		All rights reserved.</div>
 
 </body>
@@ -73,19 +74,8 @@ body:before {
 	}
 	
 	setCookie("playerId", "");
-	function
-				setCookie(cookieName, cookieValue, nDays) {
-		var today=new
-				Date();
-		var expire=new Date();
-		if (nDays== null || nDays==
-				0) {
-			nDays=1;
-				}
-		expire.setTime(today.getTime() + 3600000 * 24 * nDays);
-		document.cookie=cookieName
-				+ "=" + escape(cookieValue) + ";expires="
-				+ expire.toGMTString();
+	function setCookie(cookieName, cookieValue) {
+	 document.cookie=cookieName + "=" + escape(cookieValue);
 	};
 </script>
 </html>
