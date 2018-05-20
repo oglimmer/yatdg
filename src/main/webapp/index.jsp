@@ -47,7 +47,7 @@ body:before {
 			</div>
 
 			<div id="startGameDiv" style="margin-bottom: 10px;">
-        By clicking this link you accept 2 session cookies on your computer. They don't store any personal information and are just used to identify your computer unless you will close your browser.<br/>
+        We have stored 2 session cookies on your computer. They don't store any personal information and are just used to identify your computer on subsequent http calls unless you will close your browser. If you are not okay with those cookies, just leave this page and your browser will delete them as soon as you terminate your browser application.<br/>
 				<a href="createGame.jsp">Create new game and wait for another
 					player</a>
 			</div>
