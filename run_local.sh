@@ -68,19 +68,19 @@ cleanup()
   echo "****************************************************************"
 
   ALL_COMPONENTS=(tomcat)
-  for keepRunningAllElement in "${ALL_COMPONENTS[@]}"; do
-    IFS=',' read -r -a array <<< "$KEEP_RUNNING"
-    found=0
-    for keepRunningToFindeElement in "${array[@]}"; do
-      if [ "$keepRunningAllElement" == "$keepRunningToFindeElement" ]; then
-        echo "Not stopping $keepRunningAllElement!"
-        found=1
+  for componentToStop in "${ALL_COMPONENTS[@]}"; do
+    IFS=',' read -r -a keepRunningArray <<< "$KEEP_RUNNING"
+    componentFoundToKeepRunning=0
+    for keepRunningToFindeElement in "${keepRunningArray[@]}"; do
+      if [ "$componentToStop" == "$keepRunningToFindeElement" ]; then
+        echo "Not stopping $componentToStop!"
+        componentFoundToKeepRunning=1
       fi
     done
-    if [ "$found" -eq 0 ]; then
+    if [ "$componentFoundToKeepRunning" -eq 0 ]; then
       
-      if [ "$keepRunningAllElement" == "tomcat" ]; then
-        echo "Stopping $keepRunningAllElement ..."
+      if [ "$componentToStop" == "tomcat" ]; then
+        echo "Stopping $componentToStop ..."
         
         if [ "$TYPE_SOURCE_TOMCAT" == "docker" ]; then
          docker rm -f $dockerContainerIDtomcat
@@ -591,7 +591,7 @@ if [ "$TYPE_SOURCE_TOMCAT" == "download" ]; then
   # start tomcat
   if [ ! -f ".tomcatPid" ]; then
     
-    JAVA_OPTS=""
+    export JAVA_OPTS="$JAVA_OPTS "
     ./localrun/apache-tomcat-$TOMCAT_VERSION/bin/startup.sh
     echo "download">.tomcatPid
   fi
