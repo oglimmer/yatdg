@@ -9,6 +9,16 @@ module.exports = {
     },
   },
 
+  versions: {
+    yatdg: {
+      TestedWith: "3-jre-11"
+    },
+    tomcat: {
+      Docker: "tomcat9-openjdk11-openj9",
+      TestedWith: "7 & 9"
+    }
+  },
+  
   software: {
     yatdg: {
       Source: "mvn",
@@ -17,6 +27,8 @@ module.exports = {
 
     tomcat: {
       Source: "tomcat",
+      DockerImage: "oglimmer/adoptopenjdk-tomcat",
+      DockerMemory: "70M",
       Deploy: "yatdg"
     }
   }
